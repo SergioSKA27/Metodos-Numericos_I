@@ -64,13 +64,13 @@ El método de Newton, también conocido como el método de Newton-Raphson, es un
 
 El algoritmo del método de Newton se puede resumir en los siguientes pasos:
 
-1. Dado un punto inicial $x_0$ cercano a la raíz de la función $f(x)$, se calcula la pendiente de la función en ese punto, es decir, su derivada $f'(x_0)$.
+- 1. Dado un punto inicial $x_0$ cercano a la raíz de la función $f(x)$, se calcula la pendiente de la función en ese punto, es decir, su derivada $f'(x_0)$.
 
-2. Se calcula la recta tangente a la curva de la función en el punto $(x_0, f(x_0))$. Esta recta intersecta el eje $x$ en el punto $x_1$, que se convierte en una mejor aproximación de la raíz.
+- 2. Se calcula la recta tangente a la curva de la función en el punto $(x_0, f(x_0))$. Esta recta intersecta el eje $x$ en el punto $x_1$, que se convierte en una mejor aproximación de la raíz.
 
-3. Se repiten los pasos 1 y 2 utilizando $x_1$ como el nuevo punto inicial, calculando su derivada $f'(x_1)$ y encontrando la nueva aproximación $x_2$ mediante la intersección de la recta tangente.
+- 3. Se repiten los pasos 1 y 2 utilizando $x_1$ como el nuevo punto inicial, calculando su derivada $f'(x_1)$ y encontrando la nueva aproximación $x_2$ mediante la intersección de la recta tangente.
 
-4. Se continúa este proceso de forma iterativa hasta alcanzar una aproximación deseada o agotar un número máximo de iteraciones.
+- 4. Se continúa este proceso de forma iterativa hasta alcanzar una aproximación deseada o agotar un número máximo de iteraciones.
 
 La fórmula general para la iteración del método de Newton es:
 

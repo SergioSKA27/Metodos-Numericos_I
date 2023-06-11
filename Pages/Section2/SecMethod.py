@@ -55,7 +55,7 @@ El método de la secante es un algoritmo iterativo utilizado para encontrar raí
 
 El algoritmo del método de la secante se puede resumir en los siguientes pasos:
 
-1. Dados dos puntos iniciales $x_0$ y $x_1$ cercanos a la raíz de la función $f(x)$, se calcula la pendiente de la recta secante que pasa por los puntos $(x_0, f(x_0))$ y $(x_1, f(x_1))$. La pendiente de la recta secante se puede aproximar utilizando la fórmula:
+- 1. Dados dos puntos iniciales $x_0$ y $x_1$ cercanos a la raíz de la función $f(x)$, se calcula la pendiente de la recta secante que pasa por los puntos $(x_0, f(x_0))$ y $(x_1, f(x_1))$. La pendiente de la recta secante se puede aproximar utilizando la fórmula:
 
 $$
 \begin{align*}
@@ -63,7 +63,7 @@ m = \frac{{f(x_1) - f(x_0)}}{{x_1 - x_0}}
 \end{align*}
 $$
 
-2. La recta secante intersecta el eje $x$ en el punto $x_2$, que se convierte en una mejor aproximación de la raíz. El valor de $x_2$ se puede calcular mediante la ecuación de la recta:
+- 2. La recta secante intersecta el eje $x$ en el punto $x_2$, que se convierte en una mejor aproximación de la raíz. El valor de $x_2$ se puede calcular mediante la ecuación de la recta:
 
 $$
 \begin{align*}
@@ -71,9 +71,9 @@ x_2 = x_1 - \frac{{f(x_1) \cdot (x_1 - x_0)}}{{f(x_1) - f(x_0)}}
 \end{align*}
 $$
 
-3. Se actualizan los valores de $x_0$ y $x_1$ con $x_1$ y $x_2$ respectivamente.
+- 3. Se actualizan los valores de $x_0$ y $x_1$ con $x_1$ y $x_2$ respectivamente.
 
-4. Se repiten los pasos 1 y 2 hasta alcanzar una aproximación deseada o agotar un número máximo de iteraciones.
+- 4. Se repiten los pasos 1 y 2 hasta alcanzar una aproximación deseada o agotar un número máximo de iteraciones.
 
 El método de la secante combina las ventajas del método de la regla falsa y el método de Newton. A diferencia de la regla falsa, no requiere el cálculo de dos valores de función en cada iteración. En cambio, utiliza la información de dos puntos anteriores para estimar la raíz. A diferencia del método de Newton, no necesita conocer la derivada de la función, lo que lo hace más general y aplicable a una amplia variedad de funciones.
 

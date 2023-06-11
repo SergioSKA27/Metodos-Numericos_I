@@ -9,6 +9,18 @@ import struct
 import math
 
 
+file1_ = open("Logo.gif", "rb")
+
+
+
+contents1 = file1_.read()
+data_url1 = base64.b64encode(contents1).decode("utf-8")
+file1_.close()
+
+st.markdown(
+    f'<img src="data:image/gif;base64,{data_url1}" alt="logo">',
+    unsafe_allow_html=True,
+)
 
 
 r'''

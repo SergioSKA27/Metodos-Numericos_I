@@ -53,8 +53,8 @@ intervalo dado. Este método es iterativo y se basa en el teorema del valor inte
 El objetivo principal del método de bisección es reducir el intervalo inicial en el que se encuentra la raíz de la
 función hasta alcanzar una precisión deseada. El algoritmo funciona de la siguiente manera:
 
-1. Dado un intervalo inicial $[a, b]$ donde se espera encontrar una raíz y una función $f(x)$ continua en ese intervalo.
-2. Se calcula el punto medio $c$ del intervalo:
+- 1. Dado un intervalo inicial $[a, b]$ donde se espera encontrar una raíz y una función $f(x)$ continua en ese intervalo.
+- 2. Se calcula el punto medio $c$ del intervalo:
 
 $$
 \begin{align*}
@@ -62,7 +62,7 @@ $$
 \end{align*}
 $$
 
-3. Se evalúa el valor de la función en el punto medio:
+- 3. Se evalúa el valor de la función en el punto medio:
 
 $$
 \begin{align*}
@@ -70,18 +70,37 @@ f(c)
 \end{align*}
 $$
 
-4. Si $f(c)$ es cercano a cero o aproximadamente cero (dentro de una tolerancia establecida), se considera $c$ como una
+- 4. Si $f(c)$ es cercano a cero o aproximadamente cero (dentro de una tolerancia establecida), se considera $c$ como una
 aproximación de la raíz y se termina el algoritmo.
-5. De lo contrario, se verifica en qué mitad del intervalo, $[a, c]$ o $[c, b]$, existe un cambio de signo de la función.
-6. Se reemplaza el extremo correspondiente del intervalo con el valor de $c$, manteniendo el extremo que tiene el mismo
+- 5. De lo contrario, se verifica en qué mitad del intervalo, $[a, c]$ o $[c, b]$, existe un cambio de signo de la función.
+- 6. Se reemplaza el extremo correspondiente del intervalo con el valor de $c$, manteniendo el extremo que tiene el mismo
 signo que $f(c)$.
-7. Se repiten los pasos 2 a 6 hasta que se alcance la precisión deseada.
+- 7. Se repiten los pasos 2 a 6 hasta que se alcance la precisión deseada.
 
 El método de bisección es relativamente sencillo y garantiza la convergencia hacia la raíz de la función,
 siempre y cuando la función sea continua en el intervalo dado y haya un cambio de signo.
 Sin embargo, puede requerir un número considerable de iteraciones para alcanzar la precisión deseada,
 especialmente si la función tiene una curva suave o múltiples raíces en el intervalo.
 
+
+
+'''
+file1_ = open("Pages/Section2/Fig1_Bis.png", "rb")
+
+
+
+contents1 = file1_.read()
+data_url1 = base64.b64encode(contents1).decode("utf-8")
+file1_.close()
+
+st.markdown(
+    f'<img src="data:image/gif;base64,{data_url1}" alt="biseccionimg">',
+    unsafe_allow_html=True,
+)
+
+
+
+r'''
 ###  :paperclip: Ejemplo
 
 Sea
