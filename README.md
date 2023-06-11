@@ -1,2 +1,2 @@
-# Metodos-Numericos_I
+# Metodos Numericos I
 Formulario Metodos Numericos 1
