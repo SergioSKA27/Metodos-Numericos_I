@@ -6,6 +6,7 @@ import plotly.graph_objects as go
 import sympy as sp
 import base64
 import struct
+import math
 
 
 def calcular_error_absoluto(valor_real, valor_aproximado):
@@ -13,7 +14,6 @@ def calcular_error_absoluto(valor_real, valor_aproximado):
 
 def calcular_error_relativo(valor_real, valor_aproximado):
     return abs(valor_real - valor_aproximado) / abs(valor_real)
-
 
 def float_to_binary(num, bits):
     if bits == 32:
@@ -28,6 +28,18 @@ def float_to_binary(num, bits):
     binary = [f'{i:08b}' for i in ints]
 
     return ''.join(binary)
+
+
+def redondear(numero, decimales):
+    factor = 10 ** decimales
+    return round(numero * factor) / factor
+
+def truncar(numero, decimales):
+    factor = 10 ** decimales
+    return math.trunc(numero * factor) / factor
+
+def valor_absoluto(numero):
+    return abs(numero)
 
 
 st.title('UNIDAD 1 ANÁLISIS DE ERROR')
@@ -180,3 +192,22 @@ if st.button("Calcular",key='input2'):
     if binary_representation:
         st.write(f"Representación en binario de {num} en {bits} bits:")
         st.write(binary_representation)
+
+
+st.title("Operaciones matemáticas")
+
+numeros = st.text_input("Ingrese un número:",'0')
+decimales = st.number_input("Número de decimales:", min_value=0, max_value=10, step=1)
+
+numero = float(sp.parse_expr(numeros))
+if st.button("Redondear"):
+    resultado = redondear(numero, decimales)
+    st.write(f"El número redondeado es: {resultado}")
+
+if st.button("Truncar"):
+    resultado = truncar(numero, decimales)
+    st.write(f"El número truncado es: {resultado}")
+
+if st.button("Valor absoluto"):
+    resultado = valor_absoluto(numero)
+    st.write(f"El valor absoluto es: {resultado}")

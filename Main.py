@@ -15,8 +15,23 @@ add_page_title()
 # should be
 show_pages(
     [
-        Page("Portada.py", "Índice", "🏠"),
+        Page("indice.py", "Índice", "🏠"),
+
+
         Page("Pages/Section1/Error_AbsR.py", "1.1 Errores de redondeo ", ":books:"),
+        Page("Pages/Section1/ErrorProp.py", "1.2 Propagación del error  ", ":books:"),
+        Page("Pages/Section1/convorder.py", "1.3 Orden de convergencia  ", ":books:"),
+
+        Page("Pages/Section2/Bismethod.py", "2.1 Método de bisección ", ":books:"),
+        Page("Pages/Section2/FalsePos.py", "2.2 Método de falsa posición ", ":books:"),
+        Page("Pages/Section2/NewtonMethod.py", "2.3 Método de Newton ", ":books:"),
+        Page("Pages/Section2/SecMethod.py", "2.4 Método de la secante ", ":books:"),
+        Page("Pages/Section2/Bairstow.py", "2.5 Método de Bairstow", ":books:"),
+
+
+
+
+
     ]
 )
 
