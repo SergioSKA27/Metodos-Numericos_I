@@ -30,6 +30,17 @@ show_pages(
 
 
 
+        Page("Pages/Section3/Conditions.py", "3.1 Condiciones necesarias y suficientes", ":notebook_with_decorative_cover:"),
+        Page("Pages/Section3/matrixinv.py", "3.1.1 Inversión de matrices", ":notebook_with_decorative_cover:"),
+        Page("Pages/Section3/intercambioMethod.py", "3.1.2 Método de intercambio", ":notebook_with_decorative_cover:"),
+        Page("Pages/Section3/GaussPartial.py", "3.2.1 Método de Gauss y pivoteo parcial ", ":notebook_with_decorative_cover:"),
+        Page("Pages/Section3/GaussTotal.py", "3.2.2 Método de Gauss-Jordan y pivoteo total", ":notebook_with_decorative_cover:"),
+        Page("Pages/Section3/GaussPartition.py", "3.3.3 Gauss-Jordan particionado", ":notebook_with_decorative_cover:"),
+        Page("Pages/Section3/IterativeImprove.py", "3.4.1 Mejoramiento iterativo de la solución", ":notebook_with_decorative_cover:"),
+        Page("Pages/Section3/Jacobi.py", "3.4.2 Método de Jacobi", ":notebook_with_decorative_cover:"),
+        Page("Pages/Section3/GaussSeidel.py", "3.4.3 Método de Gauss-Seidel", ":notebook_with_decorative_cover:"),
+        Page("Pages/Section3/Relajacion.py", "3.4.4 Método de relajación", ":notebook_with_decorative_cover:"),
+
 
 
     ]

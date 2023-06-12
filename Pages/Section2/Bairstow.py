@@ -10,47 +10,6 @@ import math
 
 
 
-import plotly.graph_objects as go
-import numpy as np
-
-def bairstow_method(coefficients, tolerance, max_iterations):
-    n = len(coefficients) - 1
-    roots = []
-
-    while n >= 2:
-        r = np.random.uniform(-1, 1)
-        s = np.random.uniform(-1, 1)
-
-        iterations = 0
-        while iterations < max_iterations:
-            b = coefficients.copy()
-            c = coefficients.copy()
-
-            for i in range(n, 1, -1):
-                b[i] = coefficients[i] - r * b[i + 1] - s * b[i + 2]
-                c[i] = b[i] - r * c[i + 1] - s * c[i + 2]
-
-            dr = (b[1] * c[3] - b[2] * c[2]) / (c[2] ** 2 - c[3] * c[1])
-            ds = (b[2] * c[1] - b[1] * c[2]) / (c[2] ** 2 - c[3] * c[1])
-
-            r += dr
-            s += ds
-
-            iterations += 1
-
-            if abs(dr) < tolerance and abs(ds) < tolerance:
-                break
-
-        roots.append(complex(r, s))
-
-        coefficients = b[2:]
-        n = len(coefficients) - 1
-
-    if n == 1:
-        roots.append(-coefficients[1] / coefficients[2])
-
-    return roots
-
 
 
 st.title('2. Solución Numérica de Ecuaciones de una Sola Variable')
@@ -106,32 +65,4 @@ En resumen, el método de Bairstow es un algoritmo utilizado para encontrar las 
 '''
 
 
-# Definir los coeficientes del polinomio
-coefficients = [1, -3, -4, 12, -4]
 
-# Definir la tolerancia y el número máximo de iteraciones
-tolerance = 1e-6
-max_iterations = 50
-
-# Ejecutar el método de Bairstow
-roots = bairstow_method(coefficients, tolerance, max_iterations)
-
-# Crear un rango de valores para la variable x
-x = np.linspace(-5, 5, 200)
-
-# Evaluar el polinomio en el rango de valores de x
-y = np.polyval(coefficients, x)
-
-# Crear una figura de Plotly y agregar la gráfica del polinomio
-fig = go.Figure()
-fig.add_trace(go.Scatter(x=x, y=y, name='Polinomio'))
-
-# Marcar las raíces encontradas por el método de Bairstow
-for root in roots:
-    fig.add_trace(go.Scatter(x=[root.real], y=[0], mode='markers', name='Raíz', marker=dict(color='red', size=10)))
-
-# Personalizar el diseño de la gráfica
-fig.update_layout(title='Método de Bairstow', xaxis_title='x', yaxis_title='f(x)')
-
-# Mostrar la gráfica
-st.plotly_chart(fig)
