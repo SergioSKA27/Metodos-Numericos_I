@@ -12,12 +12,26 @@ import math
 st.title('2. Solución Numérica de Ecuaciones de una Sola Variable')
 
 
-import plotly.graph_objects as go
 
 def f(x):
     return x**3 - 2*x - 5
 
 def false_position_method(f,a, b, tolerance, max_iterations):
+    """
+    The false position method is a numerical method for finding the root of a function, and this Python function implements
+    it with a given tolerance and maximum number of iterations.
+
+    :param f: The function to find the root of
+    :param a: The lower bound of the interval in which the root of the function is expected to be found
+    :param b: The upper bound of the initial interval for the false position method
+    :param tolerance: The desired level of accuracy or precision in the solution. The algorithm will stop iterating once the
+    absolute value of the function evaluated at the current estimate is less than or equal to the tolerance value
+    :param max_iterations: The maximum number of iterations that the false position method will perform before stopping,
+    regardless of whether or not the desired tolerance has been reached
+    :return: The function `false_position_method` returns three values: `x_values`, `y_values`, and `tab`. `x_values` is a
+    list of the x-values of the approximations obtained by the false position method, `y_values` is a list of the
+    corresponding y-values, and `tab` is a list of lists containing the values of `a`, `b`, `c`,
+    """
     x_values = []
     y_values = []
     iterations = 0

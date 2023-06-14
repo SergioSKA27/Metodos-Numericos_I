@@ -4,11 +4,44 @@ import matplotlib as plt
 import pandas as pd
 import plotly.graph_objects as go
 import sympy as sp
+import base64
 
 from st_pages import Page, show_pages, add_page_title
 
 # Optional -- adds the title and icon to the current page
-add_page_title()
+#add_page_title()
+st.header('MÉTODOS NÚMERICOS I')
+st.subheader('Autor: Lopez Martinez Sergio Demis')
+file1_ = open("Mainfig.gif", "rb")
+
+
+
+contents1 = file1_.read()
+data_url1 = base64.b64encode(contents1).decode("utf-8")
+file1_.close()
+
+st.markdown(
+    f'<img src="data:image/gif;base64,{data_url1}" alt="cool-animation">',
+    unsafe_allow_html=True,
+)
+
+
+
+
+file1_ = open("Fig1.gif", "rb")
+
+
+
+contents1 = file1_.read()
+data_url1 = base64.b64encode(contents1).decode("utf-8")
+file1_.close()
+
+st.markdown(
+    f'<img src="data:image/gif;base64,{data_url1}" alt="cool-animation">',
+    unsafe_allow_html=True,
+)
+
+
 
 # Specify what pages should be shown in the sidebar, and what their titles and icons
 #Page("Portada.py", "Índice", "🏠"),

@@ -9,22 +9,22 @@ import struct
 import math
 
 
-file1_ = open("Logo.gif", "rb")
+file2_ = open("fes-acatlán-unam.gif", "rb")
 
 
 
-contents1 = file1_.read()
-data_url1 = base64.b64encode(contents1).decode("utf-8")
-file1_.close()
+contents2 = file2_.read()
+data_url2 = base64.b64encode(contents2).decode("utf-8")
+file2_.close()
 
 st.markdown(
-    f'<img src="data:image/gif;base64,{data_url1}" alt="logo">',
+    f'<img src="data:image/gif;base64,{data_url2}" alt="logo-fes">',
     unsafe_allow_html=True,
 )
 
 
 r'''
-# Índice del Documento
+# Índice
 
 ## 1. Introducción
    - 1.1 Errores de redondeo: aritmética del punto flotante, errores de truncamiento, absoluto y relativo
@@ -66,3 +66,18 @@ r'''
 
 
 '''
+
+
+
+file1_ = open("Logo.gif", "rb")
+
+
+
+contents1 = file1_.read()
+data_url1 = base64.b64encode(contents1).decode("utf-8")
+file1_.close()
+
+st.markdown(
+    f'<img src="data:image/gif;base64,{data_url1}" alt="logo">',
+    unsafe_allow_html=True,
+)

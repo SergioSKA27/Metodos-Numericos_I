@@ -10,12 +10,35 @@ import math
 
 
 def calcular_error_absoluto(valor_real, valor_aproximado):
+    """
+    The function calculates the absolute error between a real value and an approximate value.
+
+    :param valor_real: The actual or true value of a quantity or measurement
+    :param valor_aproximado: The approximate value of a quantity
+    :return: The function `calcular_error_absoluto` returns the absolute difference between `valor_real` and
+    `valor_aproximado`.
+    """
     return abs(valor_real - valor_aproximado)
 
 def calcular_error_relativo(valor_real, valor_aproximado):
+    """
+    The function calculates the relative error between a real value and an approximate value.
+
+    :param valor_real: The actual or true value of a quantity or measurement
+    :param valor_aproximado: The approximate value of a quantity
+    :return: The function `calcular_error_relativo` returns the relative error between a real value and an approximate
+    value. The formula used to calculate the relative error is `(abs(valor_real - valor_aproximado) / abs(valor_real))`.
+    """
     return abs(valor_real - valor_aproximado) / abs(valor_real)
 
 def float_to_binary(num, bits):
+    """
+    The function converts a given floating-point number to its binary representation with a specified number of bits.
+
+    :param num: The floating point number that you want to convert to binary
+    :param bits: The number of bits to represent the floating point number. It can be either 32 or 64
+    :return: a binary representation of a given floating-point number with a specified number of bits.
+    """
     if bits == 32:
         packed = struct.pack('!f', num)
     elif bits == 64:
@@ -31,14 +54,38 @@ def float_to_binary(num, bits):
 
 
 def redondear(numero, decimales):
+    """
+    The function "redondear" rounds a given number to a specified number of decimal places.
+
+    :param numero: The number that needs to be rounded
+    :param decimales: The number of decimal places to round the given number to
+    :return: the rounded value of the input number with the specified number of decimal places.
+    """
     factor = 10 ** decimales
     return round(numero * factor) / factor
 
 def truncar(numero, decimales):
+    """
+    The function truncates a given number to a specified number of decimal places.
+
+    :param numero: "numero" is a numeric value that we want to truncate to a certain number of decimal places
+    :param decimales: The "decimales" parameter is an integer that specifies the number of decimal places to keep when
+    truncating a given "numero" value
+    :return: a truncated version of the input `numero` with the specified number of decimal places `decimales`. The
+    `math.trunc()` function is used to remove any digits after the decimal point, and then the result is divided by a factor
+    of 10 raised to the power of `decimales` to shift the decimal point back to the correct position.
+    """
     factor = 10 ** decimales
     return math.trunc(numero * factor) / factor
 
 def valor_absoluto(numero):
+    """
+    The function "valor_absoluto" returns the absolute value of a given number.
+
+    :param numero: The input parameter of the function "valor_absoluto". It represents a number whose absolute value needs
+    to be calculated. The function returns the absolute value of the input number
+    :return: the absolute value of the input parameter `numero`.
+    """
     return abs(numero)
 
 

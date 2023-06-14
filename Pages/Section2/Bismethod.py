@@ -11,6 +11,23 @@ import math
 
 
 def bisection_method(f,a, b, tolerance, max_iterations):
+    """
+    The bisection_method function implements the bisection method for finding the root of a function within a given
+    tolerance and maximum number of iterations.
+
+    :param f: The function to find the root of using the bisection method
+    :param a: The lower bound of the interval in which we want to find the root of the function
+    :param b: The variable "b" represents the upper bound of the interval in which we want to find the root of the function
+    using the bisection method
+    :param tolerance: The tolerance is the maximum allowable error between the actual root and the approximate root found by
+    the bisection method. If the absolute value of the function evaluated at the midpoint of the interval is less than the
+    tolerance, the algorithm stops and returns the approximate root
+    :param max_iterations: The maximum number of iterations allowed for the bisection method to converge to a solution. If
+    the method does not converge within this number of iterations, it will stop and return the current best approximation
+    :return: The function `bisection_method` returns three values: `x_values`, `y_values`, and `tab`. `x_values` is a list
+    of the x-values of the midpoint of each interval in the bisection method, `y_values` is a list of the corresponding
+    y-values of the function at each midpoint, and `tab` is a list of lists containing information about each
+    """
     x_values = []
     y_values = []
 

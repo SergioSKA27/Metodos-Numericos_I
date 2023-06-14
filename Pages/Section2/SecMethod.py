@@ -9,12 +9,26 @@ import struct
 import math
 
 
-import plotly.graph_objects as go
+
 
 def ddf(x):
     return x**3 - 2*x - 5
 
 def secant_method(f,x0, x1, tolerance, max_iterations):
+    """
+    The secant_method function implements the secant method for finding roots of a function with a given tolerance and
+    maximum number of iterations.
+
+    :param f: The function to find the root of
+    :param x0: The initial guess for the root of the function
+    :param x1: The initial guess for the root of the function
+    :param tolerance: The desired level of accuracy or closeness to the true solution. The algorithm will stop iterating
+    once the absolute value of the function evaluated at the current x-value is less than or equal to the tolerance value
+    :param max_iterations: The maximum number of iterations the secant method will perform before stopping, even if the
+    desired tolerance has not been reached
+    :return: three values: a list of x values, a list of y values, and a table containing the values of x0, x1, f(x0),
+    f(x1), the new x value, and a boolean indicating whether the absolute value of f(x1) is less than the tolerance.
+    """
     x_values = []
     y_values = []
     iterations = 0

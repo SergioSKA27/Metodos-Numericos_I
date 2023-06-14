@@ -10,8 +10,6 @@ import math
 
 
 
-import plotly.graph_objects as go
-import numpy as np
 
 def dwf(x):
     return x**3 - 2*x - 5
@@ -20,6 +18,20 @@ def dddf(x):
     return 3*x**2 - 2
 
 def newton_method(f,x0, tolerance, max_iterations):
+    """
+    The function implements the Newton-Raphson method for finding roots of a function with a given tolerance and maximum
+    number of iterations.
+
+    :param f: The function for which we want to find the root using Newton's method
+    :param x0: The initial guess for the root of the function
+    :param tolerance: The desired level of accuracy or closeness to the true solution. The algorithm will stop iterating
+    once the absolute value of the function evaluated at the current guess is less than or equal to the tolerance value
+    :param max_iterations: The maximum number of iterations the function will perform before stopping, regardless of whether
+    the desired tolerance has been reached or not
+    :return: three lists: x_values, y_values, and tab. x_values contains the x values at each iteration, y_values contains
+    the corresponding y values, and tab contains a table with columns for x, f(x), x - f(x)/f'(x), and a boolean indicating
+    whether abs(f(x)) < tolerance.
+    """
     x_values = []
     y_values = []
     iterations = 0

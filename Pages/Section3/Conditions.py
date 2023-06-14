@@ -131,3 +131,34 @@ Por lo tanto, el sistema de ecuaciones lineales dado tiene una solución única 
 
 
 '''
+
+
+
+# Definir las ecuaciones lineales
+# Ecuación 1: 2x + y = 5
+# Ecuación 2: x - 3y = -7
+
+# Crear los puntos para graficar cada ecuación
+x = [-10, 10]
+y_eq1 = [(5 - 2 * xi) for xi in x]
+y_eq2 = [(xi + 7) / 3 for xi in x]
+
+# Crear las trazas de las ecuaciones
+eq1_trace = go.Scatter(x=x, y=y_eq1, mode='lines', name='2x + y = 5')
+eq2_trace = go.Scatter(x=x, y=y_eq2, mode='lines', name='x - 3y = -7')
+
+# Crear la figura y añadir las trazas
+fig = go.Figure(data=[eq1_trace, eq2_trace])
+
+# Personalizar el diseño del gráfico
+fig.update_layout(
+    title='Sistema de Ecuaciones Lineales',
+    xaxis=dict(title='x'),
+    yaxis=dict(title='y'),
+    autosize=False,
+    width=500,
+    height=500
+)
+
+# Mostrar el gráfico
+st.plotly_chart(fig)
