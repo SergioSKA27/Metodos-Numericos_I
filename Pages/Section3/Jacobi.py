@@ -234,15 +234,12 @@ if not(is_zero_matrix(m)):
             st.write('La matriz no tiene solucion :(  **|A| = 0**')
         else:
             solucion = jacobi(np.array(m), np.array(b),sp.parse_expr(x0),float(error),max_iter)
-    #        st.write('Matriz escalonada:')
-    #        st.latex(sp.latex(sp.Matrix(solucion[-1])))
             st.write('Solucion aproximada:')
             st.latex(r'''\hat{x} \approx ''' + sp.latex(sp.Matrix(solucion[0])))
             sol = sp.Matrix(m).inv() * sp.Matrix(b)
             st.write('Error con respecto a la solucion:')
             st.latex(' \hat{x} = ' + sp.latex(sp.Matrix(sol)))
             st.latex('error = ' + sp.latex(abs(sol-sp.Matrix(solucion[0]))))
-    #        st.write('Pasos realizados:')
             cols = ['x_'+str(i) for i in range(r)]
             cols.append('|| x_k ||  ')
             cols.append('|| x_k || < '+error)

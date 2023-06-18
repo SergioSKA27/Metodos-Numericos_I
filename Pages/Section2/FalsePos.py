@@ -7,7 +7,7 @@ import sympy as sp
 import base64
 import struct
 import math
-
+from streamlit_extras.stoggle import stoggle
 
 st.title('2. Solución Numérica de Ecuaciones de una Sola Variable')
 
@@ -105,6 +105,39 @@ La principal ventaja del método de falsa posición es que tiene una buena conve
 siempre se acerquen a la raíz. Sin embargo, puede requerir un mayor número de iteraciones que otros métodos más
 sofisticados, como el método de Newton-Raphson.
 
+
+
+## Algoritmo del Método de Falsa Posición
+
+Dado un intervalo $[a, b]$ y una tolerancia $\varepsilon$:
+
+1. Verificar que $f(a)$ y $f(b)$ tienen signos opuestos. Si no lo tienen, el método no se puede aplicar.
+2. Inicializar $x_0 = a$ y $x_1 = b$.
+3. Mientras la diferencia entre $x_1$ y $x_0$ sea mayor que $\varepsilon$, hacer:
+   - Calcular el punto $x = x_1 - \frac{{f(x_1) \cdot (x_1 - x_0)}}{{f(x_1) - f(x_0)}}$.
+   - Si $f(x) = 0$ o si la diferencia entre $x$ y $x_1$ es menor o igual que $\varepsilon$, retornar $x$ como la aproximación de la raíz.
+   - Si $f(x)$ y $f(x_0)$ tienen signos opuestos, actualizar $x_1 = x$; de lo contrario, actualizar $x_0 = x$.
+4. Retornar $x$ como la aproximación de la raíz.
+
+El método de Falsa Posición (Regla de la Secante) es similar al Método de Bisección, pero en lugar de dividir el intervalo a la mitad, utiliza una interpolación lineal entre los puntos $x_0$ y $x_1$ para aproximar la raíz de la función $f(x)$. En cada iteración, se calcula un nuevo punto $x$ utilizando la fórmula de la secante.
+
+La eficacia del método de Falsa Posición radica en su convergencia más rápida que el Método de Bisección, pero puede requerir más iteraciones para alcanzar la misma precisión. Es adecuado para funciones continuas y con cambios de signo en el intervalo considerado.
+
+El algoritmo es relativamente simple de implementar y puede ser una alternativa eficiente al Método de Bisección en algunos casos. Sin embargo, al igual que con el Método de Bisección, se deben cumplir ciertos supuestos para garantizar su aplicabilidad y convergencia.
+
+## Supuestos de aplicación
+
+Los supuestos de aplicación del Método de Falsa Posición son los siguientes:
+
+1. La función $f(x)$ es continua en el intervalo $[a, b]$: El Método de Falsa Posición requiere que la función sea continua en el intervalo considerado. Esto asegura que exista al menos una raíz en dicho intervalo.
+
+2. La función $f(x)$ tiene un cambio de signo en el intervalo $[a, b]$: El método se basa en la propiedad de que si $f(a)$ y $f(b)$ tienen signos opuestos, entonces existe al menos una raíz en el intervalo. Si no hay cambio de signo, el método no puede determinar la ubicación de la raíz.
+
+3. La función $f(x)$ es diferenciable en el intervalo $[a, b]$: Aunque el método no requiere la derivabilidad de la función, es deseable que la función sea diferenciable para obtener una convergencia más rápida y estable.
+
+4. No hay puntos críticos en el intervalo: El método puede ser afectado por puntos críticos como máximos o mínimos locales, puntos de inflexión o discontinuidades en el intervalo. Estos puntos pueden interferir con la convergencia o hacer que el método no funcione correctamente.
+
+Estos supuestos son importantes para garantizar la aplicabilidad y la convergencia del Método de Falsa Posición. Es fundamental tener en cuenta estas condiciones al utilizar el método y, en caso de que no se cumplan, considerar otras técnicas de búsqueda de raíces más adecuadas.
 
 ### :paperclip: Ejemplo
 
@@ -211,3 +244,33 @@ try:
 except:
     st.write('')
 
+stoggle('Implementación en Python',
+r'''
+    def false_position_method(f,a, b, tolerance, max_iterations):
+
+        x_values = []
+        y_values = []
+        iterations = 0
+
+        fx =sp.lambdify(list(f.free_symbols),f)
+
+        while iterations < max_iterations:
+            c = (a * fx(b) - b * fx(a)) / (fx(b) - fx(a))
+            x_values.append(c)
+            y_values.append(fx(c))
+
+            if abs(fx(c)) < tolerance:
+                break
+
+            if fx(a) * fx(c) < 0:
+                b = c
+            else:
+                a = c
+
+            iterations += 1
+
+        return x_values, y_values
+
+
+'''
+)

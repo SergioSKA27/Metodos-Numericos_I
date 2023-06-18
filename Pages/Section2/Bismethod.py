@@ -7,7 +7,7 @@ import sympy as sp
 import base64
 import struct
 import math
-
+from streamlit_extras.stoggle import stoggle
 
 
 def bisection_method(f,a, b, tolerance, max_iterations):
@@ -99,6 +99,38 @@ siempre y cuando la función sea continua en el intervalo dado y haya un cambio 
 Sin embargo, puede requerir un número considerable de iteraciones para alcanzar la precisión deseada,
 especialmente si la función tiene una curva suave o múltiples raíces en el intervalo.
 
+## Algoritmo del Método de Bisección
+
+Dado un intervalo $[a, b]$ y una tolerancia $\varepsilon$:
+
+1. Verificar que $f(a)$ y $f(b)$ tienen signos opuestos. Si no lo tienen, el método no se puede aplicar.
+2. Mientras $b - a$ sea mayor que $\varepsilon$, hacer:
+   - Calcular el punto medio $c = \frac{{a + b}}{2}$.
+   - Si $f(c) = 0$ o si $\frac{{b - a}}{2}$ es menor o igual que $\varepsilon$, retornar $c$ como la aproximación de la raíz.
+   - Si $f(a)$ y $f(c)$ tienen signos opuestos, actualizar $b = c$; de lo contrario, actualizar $a = c$.
+3. Retornar $c$ como la aproximación de la raíz.
+
+El método de bisección busca una raíz de la función $f(x)$ en el intervalo $[a, b]$ dividiendo iterativamente el
+intervalo a la mitad y actualizando los extremos del intervalo según el signo de $f(x)$. El proceso se repite hasta que
+se cumpla una condición de convergencia, generalmente basada en la diferencia entre los extremos del intervalo y una
+tolerancia $\varepsilon$.
+
+La eficacia del método de bisección radica en su convergencia garantizada, aunque puede requerir un número relativamente
+grande de iteraciones para alcanzar una precisión deseada. Es adecuado para funciones continuas y con cambios de signo
+en el intervalo considerado.
+
+## Suestos de aplicación
+Los supuestos de aplicación del Método de Bisección son los siguientes:
+
+1. La función $f(x)$ es continua en el intervalo $[a, b]$: El Método de Bisección requiere que la función sea continua en el intervalo considerado. Esto asegura que exista al menos una raíz en dicho intervalo.
+
+2. La función $f(x)$ tiene un cambio de signo en el intervalo $[a, b]$: El método se basa en la propiedad de que si $f(a)$ y $f(b)$ tienen signos opuestos, entonces existe al menos una raíz en el intervalo. Si no hay cambio de signo, el método no puede determinar la ubicación de la raíz.
+
+3. El intervalo inicial $[a, b]$ contiene exactamente una raíz de $f(x)$: El método asume que el intervalo dado contiene una única raíz de la función. Si hay múltiples raíces o ninguna raíz en el intervalo, los resultados pueden no ser válidos.
+
+4. No hay puntos críticos en el intervalo: El método puede ser afectado por puntos críticos como máximos o mínimos locales, puntos de inflexión o discontinuidades en el intervalo. Estos puntos pueden interferir con la convergencia o hacer que el método no funcione correctamente.
+
+Estos supuestos son importantes para garantizar la aplicabilidad y la convergencia del Método de Bisección. Es fundamental tener en cuenta estas condiciones al utilizar el método y, en caso de que no se cumplan, considerar otras técnicas de búsqueda de raíces más adecuadas.
 
 
 '''
@@ -222,3 +254,37 @@ try:
     st.plotly_chart(fig3)
 except:
     st.write('')
+
+
+
+stoggle('Implementación en Python',
+r'''
+    def bisection_method(f,a, b, tolerance, max_iterations):
+
+        x_values = []
+        y_values = []
+
+        fx = sp.lambdify(list(f.free_symbols),f)
+
+        iteration = 1
+        while iteration <= max_iterations:
+            c = (a + b) / 2
+            x_values.append(c)
+            y_values.append(fx(c))
+
+            if abs(fx(c)) < tolerance:
+                break
+
+            if fx(a) * fx(c) < 0:
+                b = c
+            else:
+                a = c
+
+            iteration += 1
+
+        return x_values, y_values
+
+
+'''
+
+)

@@ -7,6 +7,7 @@ import sympy as sp
 import base64
 import struct
 import math
+from streamlit_extras.stoggle import stoggle
 
 
 
@@ -94,6 +95,50 @@ El método de la secante combina las ventajas del método de la regla falsa y el
 La convergencia del método de la secante depende de la elección adecuada de los puntos iniciales. Es importante seleccionar dos puntos cercanos a la raíz y evitar valores que causen divisiones por cero o resultados indefinidos. Si los puntos iniciales están demasiado alejados, el método puede converger lentamente o incluso divergir. En tales casos, se recomienda ajustar los puntos iniciales o utilizar métodos alternativos.
 
 El método de la secante tiene la ventaja de no requerir el cálculo explícito de la derivada de la función, lo que lo hace útil cuando el cálculo de la derivada es complicado o costoso. Sin embargo, el método puede presentar algunas limitaciones. Puede ser sensible a las irregularidades de la función y puede converger a raíces diferentes dependiendo de los puntos iniciales. Por lo tanto, es importante evaluar cuidadosamente las características de la función y la elección de los puntos iniciales para obtener resultados precisos.
+
+## Algoritmo
+
+El algoritmo del Método de la Secante es el siguiente:
+
+1. Ingresar los valores iniciales $x_0$ y $x_1$.
+2. Ingresar la tolerancia $\epsilon$ para la condición de parada.
+3. Ingresar el número máximo de iteraciones $N$.
+4. Inicializar la variable $i = 2$.
+5. Mientras $i \leq N$ y $|f(x_i)| > \epsilon$:
+   1. Calcular la aproximación $x_{i+1}$ utilizando la fórmula:
+      $$x_{i+1} = x_i - \frac{f(x_i)(x_i - x_{i-1})}{f(x_i) - f(x_{i-1})}$$
+   2. Incrementar $i$ en 1.
+6. Si $|f(x_i)| \leq \epsilon$, se ha encontrado una aproximación de la raíz.
+7. Si se alcanza el número máximo de iteraciones $N$ sin converger, se detiene el algoritmo y se considera que no se ha encontrado la raíz.
+
+En cada iteración, el método utiliza dos puntos $x_{i-1}$ y $x_i$ para estimar la pendiente de la función y encontrar
+la intersección con el eje $x$. La aproximación de la raíz se actualiza iterativamente hasta que se cumple la condición
+de parada o se alcanza el número máximo de iteraciones.
+
+Es importante destacar que el Método de la Secante no garantiza la convergencia en todos los casos.
+Se requiere una buena elección de los puntos iniciales y puede haber situaciones en las que el método no converja o
+converja a una raíz incorrecta. Por lo tanto, es necesario realizar un análisis cuidadoso de la función y los puntos
+iniciales antes de aplicar este método.
+
+
+## Supuestos de aplicación
+
+Los supuestos de aplicación del Método de la Secante son los siguientes:
+
+1. La función $f(x)$ es continua y diferenciable: El método se basa en el cálculo de las derivadas de la función en
+cada iteración. Por lo tanto, se requiere que la función $f(x)$ sea continua y diferenciable en el intervalo considerado.
+
+2. Se eligen dos puntos iniciales cercanos a la raíz: El método utiliza dos puntos iniciales $x_{0}$ y $x_{1}$ para
+comenzar la iteración. Estos puntos deben estar lo suficientemente cerca de la raíz buscada para asegurar la
+convergencia del método. Una buena elección de los puntos iniciales es crucial para la eficiencia y convergencia del método.
+
+3. La función $f(x)$ tiene una sola raíz en el intervalo: El Método de la Secante se utiliza para encontrar una raíz
+específica de una función en un intervalo dado. Se asume que la función tiene una única raíz en ese intervalo.
+Si hay múltiples raíces o no hay raíces en el intervalo, el método puede no converger o converger a una raíz incorrecta.
+
+Estos supuestos son importantes para garantizar la aplicabilidad y la convergencia del Método de la Secante. Si alguno
+de estos supuestos no se cumple, el método puede no funcionar correctamente. Por lo tanto, es fundamental considerar
+estos supuestos y evaluar la idoneidad del método en función de las características de la función y el intervalo en cuestión.
 
 ###  :paperclip: Ejemplo
 
@@ -196,4 +241,32 @@ try:
 except:
     st.write('')
 
+
+stoggle('Implementación en Python',
+r'''
+    def secant_method(f,x0, x1, tolerance, max_iterations):
+
+        x_values = []
+        y_values = []
+        iterations = 0
+        fx = sp.lambdify(list(f.free_symbols),f)
+
+        while iterations < max_iterations:
+            x_values.append(x1)
+            y_values.append(fx(x1))
+            if abs(fx(x1)) < tolerance:
+                break
+
+            x2 = x1 - (fx(x1) * (x1 - x0)) / (fx(x1) - fx(x0))
+            x0 = x1
+            x1 = x2
+
+            iterations += 1
+
+        return x_values, y_values,tab
+
+
+
+'''
+)
 

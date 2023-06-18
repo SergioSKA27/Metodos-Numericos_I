@@ -50,16 +50,15 @@ show_pages(
     [
         Page("indice.py", "Índice", "🏠"),
 
-
         Page("Pages/Section1/Error_AbsR.py", "1.1 Errores de redondeo ", ":books:"),
         Page("Pages/Section1/ErrorProp.py", "1.2 Propagación del error  ", ":books:"),
         Page("Pages/Section1/convorder.py", "1.3 Orden de convergencia  ", ":books:"),
 
-        Page("Pages/Section2/Bismethod.py", "2.1 Método de bisección ", ":bookmark_tabs:"),
-        Page("Pages/Section2/FalsePos.py", "2.2 Método de falsa posición ", ":bookmark_tabs:"),
-        Page("Pages/Section2/NewtonMethod.py", "2.3 Método de Newton ", ":bookmark_tabs:"),
-        Page("Pages/Section2/SecMethod.py", "2.4 Método de la secante ", ":bookmark_tabs:"),
-        Page("Pages/Section2/Bairstow.py", "2.5 Método de Bairstow", ":bookmark_tabs:"),
+        Page("Pages/Section2/Bismethod.py", "2.1 Método de bisección ", ":notebook:"),
+        Page("Pages/Section2/FalsePos.py", "2.2 Método de falsa posición ", ":notebook:"),
+        Page("Pages/Section2/NewtonMethod.py", "2.3 Método de Newton ", ":notebook:"),
+        Page("Pages/Section2/SecMethod.py", "2.4 Método de la secante ", ":notebook:"),
+        Page("Pages/Section2/Bairstow.py", "2.5 Método de Bairstow", ":notebook:"),
 
 
 
@@ -74,7 +73,10 @@ show_pages(
         Page("Pages/Section3/GaussSeidel.py", "3.4.3 Método de Gauss-Seidel", ":notebook_with_decorative_cover:"),
         Page("Pages/Section3/Relajacion.py", "3.4.4 Método de relajación", ":notebook_with_decorative_cover:"),
 
-
+        Page("Pages/Section4/Contex.py", "4.1 Modelos de contexto y comportamiento", ":closed_book:"),
+        Page("Pages/Section4/Cholesky.py", "4.2 Método de Cholesky", ":closed_book:"),
+        Page("Pages/Section4/Doolittle.py", "4.3 Método Doolittle", ":closed_book:"),
+        Page("Pages/Section4/Crout.py", "4.4 Solución de sistemas bandados (Método de Crout)", ":closed_book:"),
 
     ]
 )

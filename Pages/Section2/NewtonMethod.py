@@ -7,7 +7,7 @@ import sympy as sp
 import base64
 import struct
 import math
-
+from streamlit_extras.stoggle import stoggle
 
 
 
@@ -72,15 +72,20 @@ st.title('2. Solución Numérica de Ecuaciones de una Sola Variable')
 r'''
 # 2.3 Método de Newton
 
-El método de Newton, también conocido como el método de Newton-Raphson, es un algoritmo iterativo utilizado para encontrar raíces de una función. Este método es altamente eficiente cuando se cuenta con una buena estimación inicial y la función es suficientemente suave.
+El método de Newton, también conocido como el método de Newton-Raphson, es un algoritmo iterativo utilizado para
+encontrar raíces de una función. Este método es altamente eficiente cuando se cuenta con una buena estimación inicial
+y la función es suficientemente suave.
 
 El algoritmo del método de Newton se puede resumir en los siguientes pasos:
 
-- 1. Dado un punto inicial $x_0$ cercano a la raíz de la función $f(x)$, se calcula la pendiente de la función en ese punto, es decir, su derivada $f'(x_0)$.
+- 1. Dado un punto inicial $x_0$ cercano a la raíz de la función $f(x)$, se calcula la pendiente de la función en
+ese punto, es decir, su derivada $f'(x_0)$.
 
-- 2. Se calcula la recta tangente a la curva de la función en el punto $(x_0, f(x_0))$. Esta recta intersecta el eje $x$ en el punto $x_1$, que se convierte en una mejor aproximación de la raíz.
+- 2. Se calcula la recta tangente a la curva de la función en el punto $(x_0, f(x_0))$. Esta recta intersecta el
+eje $x$ en el punto $x_1$, que se convierte en una mejor aproximación de la raíz.
 
-- 3. Se repiten los pasos 1 y 2 utilizando $x_1$ como el nuevo punto inicial, calculando su derivada $f'(x_1)$ y encontrando la nueva aproximación $x_2$ mediante la intersección de la recta tangente.
+- 3. Se repiten los pasos 1 y 2 utilizando $x_1$ como el nuevo punto inicial, calculando su derivada $f'(x_1)$ y
+encontrando la nueva aproximación $x_2$ mediante la intersección de la recta tangente.
 
 - 4. Se continúa este proceso de forma iterativa hasta alcanzar una aproximación deseada o agotar un número máximo de iteraciones.
 
@@ -92,11 +97,72 @@ x_{n+1} = x_n - \frac{{f(x_n)}}{{f'(x_n)}}
 \end{align*}
 $$
 
-El método de Newton converge rápidamente hacia la raíz si la estimación inicial es cercana a la raíz y si la función es suficientemente suave. La convergencia del método está determinada por la tasa de cambio de la función en las proximidades de la raíz. Si la derivada es grande en ese punto, la convergencia será más rápida.
+El método de Newton converge rápidamente hacia la raíz si la estimación inicial es cercana a la raíz y si la función
+es suficientemente suave. La convergencia del método está determinada por la tasa de cambio de la función en las
+proximidades de la raíz. Si la derivada es grande en ese punto, la convergencia será más rápida.
 
-Es importante tener en cuenta que el método de Newton requiere el cálculo de la derivada de la función en cada iteración. En algunos casos, esta derivada puede ser difícil o costosa de obtener analíticamente. En tales situaciones, se pueden utilizar aproximaciones numéricas de la derivada, como el método de diferencias finitas, para calcularla.
+Es importante tener en cuenta que el método de Newton requiere el cálculo de la derivada de la función en cada iteración.
+En algunos casos, esta derivada puede ser difícil o costosa de obtener analíticamente. En tales situaciones, se pueden
+utilizar aproximaciones numéricas de la derivada, como el método de diferencias finitas, para calcularla.
 
-Sin embargo, el método de Newton también tiene algunas limitaciones. Puede haber casos en los que el método no converge o se estanque en mínimos locales o puntos de inflexión. Además, el método puede ser sensible a la elección de la estimación inicial, y diferentes estimaciones pueden conducir a raíces diferentes o a la no convergencia del método.
+Sin embargo, el método de Newton también tiene algunas limitaciones. Puede haber casos en los que el método no converge
+o se estanque en mínimos locales o puntos de inflexión. Además, el método puede ser sensible a la elección de la estimación
+inicial, y diferentes estimaciones pueden conducir a raíces diferentes o a la no convergencia del método.
+
+
+## Algoritmo del Método de Newton
+
+Dado un punto inicial $x_0$ y una tolerancia $\varepsilon$:
+
+1. Inicializar $x = x_0$.
+2. Mientras $|f(x)| > \varepsilon$, hacer:
+   - Calcular la derivada de $f(x)$, $f'(x)$.
+   - Calcular la corrección $\Delta x = -\frac{f(x)}{f'(x)}$.
+   - Actualizar $x = x + \Delta x$.
+3. Retornar $x$ como la aproximación de la raíz.
+
+El Método de Newton-Raphson es un método iterativo utilizado para encontrar aproximaciones de raíces de una
+función. El método se basa en la idea de aproximar la función por una recta tangente en cada iteración y encontrar
+el punto en el cual la recta tangente cruza el eje x, que se considera una mejor aproximación de la raíz.
+
+En cada iteración, se calcula la derivada de la función en el punto actual y se determina la corrección $\Delta x$
+necesaria para acercarse a la raíz. Luego, se actualiza el valor de $x$ sumando la corrección.
+Este proceso se repite hasta que se alcance una precisión deseada, determinada por la tolerancia $\varepsilon$.
+
+El Método de Newton-Raphson es conocido por su convergencia rápida cuando se parte de un punto cercano a la raíz y
+cuando la función es diferenciable y tiene una derivada no nula en la vecindad de la raíz. Sin embargo, es importante
+tener en cuenta que el método puede no converger o puede converger a una raíz diferente si no se cumplen ciertas condiciones.
+
+El algoritmo proporcionado es una implementación básica del Método de Newton-Raphson. Se parte de un punto inicial
+$x_0$ y se realizan iteraciones hasta alcanzar la precisión deseada. El valor obtenido en la última iteración se retorna
+como la aproximación de la raíz.
+
+Es importante destacar que el Método de Newton-Raphson puede requerir un análisis adicional para asegurar su aplicabilidad
+y convergencia, como la elección adecuada del punto inicial y la verificación de las condiciones necesarias para la
+convergencia del método.
+
+
+## Supuestos de aplicación
+
+Los supuestos de aplicación del Método de Newton-Raphson son los siguientes:
+
+1. La función $f(x)$ es continuamente diferenciable: El método se basa en el cálculo de la derivada de la función en
+cada iteración. Por lo tanto, se requiere que la función $f(x)$ sea diferenciable en el intervalo considerado.
+Esto asegura que la derivada exista y se pueda calcular en cada punto necesario.
+
+2. La derivada $f'(x)$ no es igual a cero en el intervalo: El método utiliza la derivada de la función para calcular
+la corrección $\Delta x$ en cada iteración. Para evitar divisiones por cero y asegurar una convergencia adecuada,
+se asume que la derivada $f'(x)$ no es igual a cero en el intervalo considerado.
+
+3. Se elige un punto inicial cercano a la raíz: El Método de Newton-Raphson converge más rápidamente cuando se parte de
+un punto inicial cercano a la raíz. Por lo tanto, se asume que se ha seleccionado un punto inicial adecuado que se
+encuentra en la vecindad de la raíz buscada.
+
+Estos supuestos son importantes para garantizar la aplicabilidad y la convergencia del Método de Newton-Raphson.
+Si alguno de estos supuestos no se cumple, el método puede no converger o puede converger a una raíz incorrecta.
+Por lo tanto, es fundamental considerar estos supuestos al utilizar el método y, en caso de no cumplirse, evaluar
+otras técnicas de búsqueda de raíces más apropiadas.
+
 
 ###  :paperclip: Ejemplo
 
@@ -195,3 +261,31 @@ try:
     st.plotly_chart(fig3)
 except:
     st.write('')
+
+stoggle('Implementación en Python',
+r'''
+    def newton_method(f,x0, tolerance, max_iterations):
+
+        x_values = []
+        y_values = []
+        iterations = 0
+
+        fx = sp.lambdify(list(f.free_symbols),f)
+        dfx = sp.lambdify(list(f.free_symbols),sp.diff(f))
+
+        while iterations < max_iterations:
+            x_values.append(x0)
+            y_values.append(fx(x0))
+
+            if abs(fx(x0)) < tolerance:
+                break
+
+            x1 = x0 - fx(x0) / dfx(x0)
+            x0 = x1
+
+            iterations += 1
+
+        return x_values, y_values
+
+'''
+)
