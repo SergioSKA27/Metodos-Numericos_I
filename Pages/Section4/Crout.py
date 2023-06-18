@@ -7,6 +7,7 @@ import sympy as sp
 import base64
 import struct
 import math
+from streamlit_extras.echo_expander import echo_expander
 
 def is_zero_matrix(A):
     """
@@ -23,7 +24,18 @@ def is_zero_matrix(A):
                 return False
     return True
 
+
+st.cache(max_entries=1000)
 def crout_factorization(A):
+    """
+    The crout_factorization function performs Crout factorization on a given matrix A and returns the lower triangular
+    matrix L and upper triangular matrix U.
+
+    :param A: A is a square matrix of size n x n that needs to be factorized into a lower triangular matrix L and an upper
+    triangular matrix U using Crout's method
+    :return: The function `crout_factorization` returns two matrices, `L` and `U`, which are the lower and upper triangular
+    matrices obtained from the Crout factorization of the input matrix `A`.
+    """
     n = len(A)
     L = np.zeros((n, n))
     U = np.zeros((n, n))
@@ -209,22 +221,45 @@ m = [[(sp.Matrix(mat2))[i,j] for j in range(r)] for i in range(r)]
 
 st.latex('A = ' + sp.latex(sp.Matrix(m)))
 
+if st.button('Calcular'):
+    if not(is_zero_matrix(m)):
 
-if not(is_zero_matrix(m)):
+        try:
+            if sp.Matrix(m).det() == 0:
+                st.write('La matriz no tiene solucion :(  **|A| = 0**')
+            else:
+                solucion = crout_factorization(np.array(m).astype(float))
+                st.write('Matriz triangular inferior L:')
+                st.latex(r'''\mathbb{L} \approx ''' + sp.latex(sp.Matrix(solucion[0])) )
+                st.write('Matriz triangular superior U:')
+                st.latex(r'''\mathbb{U} \approx ''' + sp.latex(sp.Matrix(solucion[1])) )
 
-    try:
-        if sp.Matrix(m).det() == 0:
-            st.write('La matriz no tiene solucion :(  **|A| = 0**')
-        else:
-            solucion = crout_factorization(np.array(m).astype(float))
-            st.write('Matriz triangular inferior L:')
-            st.latex(r'''\mathbb{L} \approx ''' + sp.latex(sp.Matrix(solucion[0])) )
-            st.write('Matriz triangular superior U:')
-            st.latex(r'''\mathbb{U} \approx ''' + sp.latex(sp.Matrix(solucion[1])) )
+        except:
+            if sp.Matrix(m).det() == 0:
+                st.write('La matriz no tiene solucion :(')
+            else:
+                st.write('Algo salio mal :(')
 
-    except:
-        if sp.Matrix(m).det() == 0:
-            st.write('La matriz no tiene solucion :(')
-        else:
-            st.write('Algo salio mal :(')
+with echo_expander(code_location="below", label="Implementación en Python"):
+    import numpy as np
+    import sympy as sp
+    def crout_factorization(A):
+        n = len(A)
+        L = np.zeros((n, n))
+        U = np.zeros((n, n))
 
+        # Paso 1: Inicializar L y U con ceros
+        for i in range(n):
+            L[i][i] = 1
+
+        # Paso 2: Calcular elementos de L y U
+        for i in range(n):
+            for j in range(i, n):
+                sum1 = sum(L[i][k] * U[k][j] for k in range(i))
+                U[i][j] = A[i][j] - sum1
+
+            for j in range(i+1, n):
+                sum2 = sum(L[j][k] * U[k][i] for k in range(i))
+                L[j][i] = (A[j][i] - sum2) / U[i][i]
+
+        return L, U

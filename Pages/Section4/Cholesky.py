@@ -7,6 +7,7 @@ import sympy as sp
 import base64
 import struct
 import math
+from streamlit_extras.echo_expander import echo_expander
 
 def is_zero_matrix(A):
     """
@@ -23,24 +24,32 @@ def is_zero_matrix(A):
                 return False
     return True
 
+st.cache(max_entries=1000)
 def cholesky_decomposition(A):
-    n = A.shape[0]
-    L = np.zeros((n, n))
+  """
+  The function performs Cholesky decomposition on a given matrix A and returns the lower triangular matrix L.
 
-    for i in range(n):
-        for j in range(i+1):
-            if i == j:
-                sum_sq = 0
-                for k in range(j):
-                    sum_sq += L[i, k] ** 2
-                L[i, j] = np.sqrt(A[i, i] - sum_sq)
-            else:
-                sum_prod = 0
-                for k in range(j):
-                    sum_prod += L[i, k] * L[j, k]
-                L[i, j] = (A[i, j] - sum_prod) / L[j, j]
+  :param A: A is a square matrix of size n x n that needs to be decomposed using Cholesky decomposition
+  :return: The function `cholesky_decomposition` returns the lower triangular matrix `L` of the Cholesky decomposition of
+  the input matrix `A`.
+  """
+  n = A.shape[0]
+  L = np.zeros((n, n))
 
-    return L
+  for i in range(n):
+      for j in range(i+1):
+          if i == j:
+              sum_sq = 0
+              for k in range(j):
+                  sum_sq += L[i, k] ** 2
+              L[i, j] = np.sqrt(A[i, i] - sum_sq)
+          else:
+              sum_prod = 0
+              for k in range(j):
+                  sum_prod += L[i, k] * L[j, k]
+              L[i, j] = (A[i, j] - sum_prod) / L[j, j]
+
+  return L
 
 
 st.header('4. Factorización LU y sus Aplicaciones')
@@ -212,23 +221,48 @@ m = [[(sp.Matrix(mat2))[i,j] for j in range(r)] for i in range(r)]
 
 st.latex('A = ' + sp.latex(sp.Matrix(m)))
 
+if st.button('Calcular'):
+  if not(is_zero_matrix(m)):
 
-if not(is_zero_matrix(m)):
+      try:
+          if sp.Matrix(m).det() == 0:
+              st.write('La matriz no tiene solucion :(  **|A| = 0**')
+          else:
+              solucion = cholesky_decomposition(np.array(m).astype(float))
+              st.write('Matriz triangular inferior L:')
+              st.latex(r'''\mathbb{L} \approx ''' + sp.latex(sp.Matrix(solucion)))
+              st.write('Matriz triangular superior U:')
+              st.latex(r'''\mathbb{U} \approx ''' + sp.latex(sp.Matrix(solucion).transpose()))
+              st.write('Comprobamos que $A = LU$')
+              st.latex(sp.latex(sp.Matrix(np.round(solucion,decimals=2)))+' \cdot '+sp.latex(sp.Matrix(np.round(solucion,decimals=2)).transpose()) +' = '+sp.latex(sp.Matrix(solucion)*sp.Matrix(solucion).transpose()))
 
-    try:
-        if sp.Matrix(m).det() == 0:
-            st.write('La matriz no tiene solucion :(  **|A| = 0**')
-        else:
-            solucion = cholesky_decomposition(np.array(m).astype(float))
-            st.write('Matriz triangular inferior L:')
-            st.latex(r'''\mathbb{L} \approx ''' + sp.latex(sp.Matrix(solucion)))
-            st.write('Matriz triangular superior U:')
-            st.latex(r'''\mathbb{U} \approx ''' + sp.latex(sp.Matrix(solucion).transpose()))
-            st.write('Comprobamos que $A = LU$')
-            st.latex(sp.latex(sp.Matrix(np.round(solucion,decimals=2)))+' \cdot '+sp.latex(sp.Matrix(np.round(solucion,decimals=2)).transpose()) +' = '+sp.latex(sp.Matrix(solucion)*sp.Matrix(solucion).transpose()))
+      except:
+          if sp.Matrix(m).det() == 0:
+              st.write('La matriz no tiene solucion :(')
+          else:
+              st.write('Algo salio mal :(')
 
-    except:
-        if sp.Matrix(m).det() == 0:
-            st.write('La matriz no tiene solucion :(')
-        else:
-            st.write('Algo salio mal :(')
+
+
+
+with echo_expander(code_location="below", label="Implementación en Python"):
+    import numpy as np
+    import sympy as sp
+    def cholesky_decomposition(A):
+      n = A.shape[0]
+      L = np.zeros((n, n))
+
+      for i in range(n):
+          for j in range(i+1):
+              if i == j:
+                  sum_sq = 0
+                  for k in range(j):
+                      sum_sq += L[i, k] ** 2
+                  L[i, j] = np.sqrt(A[i, i] - sum_sq)
+              else:
+                  sum_prod = 0
+                  for k in range(j):
+                      sum_prod += L[i, k] * L[j, k]
+                  L[i, j] = (A[i, j] - sum_prod) / L[j, j]
+
+      return L

@@ -7,6 +7,7 @@ import sympy as sp
 import base64
 import struct
 import math
+from streamlit_extras.echo_expander import echo_expander
 
 
 
@@ -28,7 +29,7 @@ def is_zero_matrix(A):
                 return False
     return True
 
-
+st.cache(max_entries=1000)
 def intercambio(A, b):
     """
     The function performs Gaussian elimination with partial pivoting to solve a system of linear equations.
@@ -227,23 +228,66 @@ b = [(sp.Matrix(mat2))[i,-1] for i in range(r)]
 
 st.latex('A = ' + sp.latex(sp.Matrix(m))+ ' , b = '+sp.latex(sp.Matrix(b)))
 r'# Método de intercambio'
+if st.button('Calcular'):
+    if not(is_zero_matrix(m)):
+        try:
+            if sp.Matrix(m).det() == 0:
+                st.write('La matriz no tiene solucion :(')
+            else:
+                solucion = intercambio(np.array(m), np.array(b))
+                st.write('Matriz escalonada:')
+                st.latex(sp.latex(sp.Matrix(solucion[2])))
+                st.write('Solucion:')
+                st.latex('\hat{x} = ' + sp.latex(sp.Matrix(solucion[0])))
+                st.write('Pasos realizados:')
+                for t in solucion[1]:
+                    st.latex(t)
+        except:
+            if sp.Matrix(m).det() == 0:
+                st.write('La matriz no tiene solucion :(')
+            else:
+                st.write('Algo salio mal :(')
 
-if not(is_zero_matrix(m)):
-    try:
-        if sp.Matrix(m).det() == 0:
-            st.write('La matriz no tiene solucion :(')
-        else:
-            solucion = intercambio(np.array(m), np.array(b))
-            st.write('Matriz escalonada:')
-            st.latex(sp.latex(sp.Matrix(solucion[2])))
-            st.write('Solucion:')
-            st.latex('\hat{x} = ' + sp.latex(sp.Matrix(solucion[0])))
-            st.write('Pasos realizados:')
-            for t in solucion[1]:
-                st.latex(t)
-    except:
-        if sp.Matrix(m).det() == 0:
-            st.write('La matriz no tiene solucion :(')
-        else:
-            st.write('Algo salio mal :(')
+
+with echo_expander(code_location="below", label="Implementación en Python"):
+    import numpy as np
+    import sympy as sp
+    def intercambio(A, b):
+        # Crear matriz aumentada
+        matriz_aumentada = np.concatenate((A, b.reshape(-1, 1)), axis=1)
+        n = len(matriz_aumentada)
+
+        # Iterar por las filas
+        for i in range(n):
+            # Encontrar el pivote
+            pivote = matriz_aumentada[i][i]
+
+            # Si el pivote es cero, realizar intercambio con otra fila
+            if pivote == 0:
+                # Encontrar una fila con un elemento no nulo en la columna actual
+                for j in range(i+1, n):
+                    if matriz_aumentada[j][i] != 0:
+                        # Intercambiar filas
+                        for k in range(n):
+                            matriz_aumentada[[i, j]] = matriz_aumentada[[j, i]]
+                        break
+
+            # Aplicar eliminación gaussiana
+            for j in range(i+1, n):
+                factor = matriz_aumentada[j][i] / pivote
+                matriz_aumentada[j] -= factor * matriz_aumentada[i]
+
+
+
+        # Realizar sustitución hacia atrás para obtener las soluciones
+        x = np.zeros(n)
+        for i in range(n-1, -1, -1):
+            x[i] = matriz_aumentada[i][-1]
+            for j in range(i+1, n):
+                x[i] -= matriz_aumentada[i][j] * x[j]
+            x[i] /= matriz_aumentada[i][i]
+
+        return x
+
+
 

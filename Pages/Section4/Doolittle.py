@@ -7,6 +7,7 @@ import sympy as sp
 import base64
 import struct
 import math
+from streamlit_extras.echo_expander import echo_expander
 
 def is_zero_matrix(A):
     """
@@ -22,19 +23,30 @@ def is_zero_matrix(A):
             if A[i][j] != 0:
                 return False
     return True
+
+
+st.cache(max_entries=1000)
 def doolittle(A):
-    n = len(A)
-    L = np.eye(n)
-    U = np.copy(A)
+  """
+  The function implements the Doolittle algorithm for LU decomposition of a given matrix.
 
-    for j in range(n):
-        # Eliminación gaussiana en la columna j
-        for i in range(j+1, n):
-            m = U[i, j] / U[j, j]
-            L[i, j] = m
-            U[i, j:] -= m * U[j, j:]
+  :param A: A is a square matrix of size n x n, which represents the system of linear equations to be solved using the
+  Doolittle decomposition method
+  :return: The function `doolittle` returns two matrices `L` and `U`, which are the lower and upper triangular matrices
+  obtained from the Doolittle decomposition of the input matrix `A`.
+  """
+  n = len(A)
+  L = np.eye(n)
+  U = np.copy(A)
 
-    return L, U
+  for j in range(n):
+    # Eliminación gaussiana en la columna j
+    for i in range(j+1, n):
+          m = U[i, j] / U[j, j]
+          L[i, j] = m
+          U[i, j:] -= m * U[j, j:]
+
+  return L, U
 
 
 st.header('4. Factorización LU y sus Aplicaciones')
@@ -171,21 +183,41 @@ m = [[(sp.Matrix(mat2))[i,j] for j in range(r)] for i in range(r)]
 
 st.latex('A = ' + sp.latex(sp.Matrix(m)))
 
+if st.button('Calcular'):
+  if not(is_zero_matrix(m)):
 
-if not(is_zero_matrix(m)):
+      try:
+          if sp.Matrix(m).det() == 0:
+              st.write('La matriz no tiene solucion :(  **|A| = 0**')
+          else:
+              solucion = doolittle(np.array(m).astype(float))
+              st.write('Matriz triangular inferior L:')
+              st.latex(r'''\mathbb{L} \approx ''' + sp.latex(sp.Matrix(np.round(solucion[0],decimals=6))) )
+              st.write('Matriz triangular superior U:')
+              st.latex(r'''\mathbb{U} \approx ''' + sp.latex(sp.Matrix(np.round(solucion[1],decimals=6))) )
 
-    try:
-        if sp.Matrix(m).det() == 0:
-            st.write('La matriz no tiene solucion :(  **|A| = 0**')
-        else:
-            solucion = doolittle(np.array(m).astype(float))
-            st.write('Matriz triangular inferior L:')
-            st.latex(r'''\mathbb{L} \approx ''' + sp.latex(sp.Matrix(np.round(solucion[0],decimals=6))) )
-            st.write('Matriz triangular superior U:')
-            st.latex(r'''\mathbb{U} \approx ''' + sp.latex(sp.Matrix(np.round(solucion[1],decimals=6))) )
+      except:
+          if sp.Matrix(m).det() == 0:
+              st.write('La matriz no tiene solucion :(')
+          else:
+              st.write('Algo salio mal :(')
 
-    except:
-        if sp.Matrix(m).det() == 0:
-            st.write('La matriz no tiene solucion :(')
-        else:
-            st.write('Algo salio mal :(')
+
+
+
+with echo_expander(code_location="below", label="Implementación en Python"):
+    import numpy as np
+    import sympy as sp
+    def doolittle(A):
+      n = len(A)
+      L = np.eye(n)
+      U = np.copy(A)
+
+      for j in range(n):
+          # Eliminación gaussiana en la columna j
+          for i in range(j+1, n):
+              m = U[i, j] / U[j, j]
+              L[i, j] = m
+              U[i, j:] -= m * U[j, j:]
+
+      return L, U

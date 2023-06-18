@@ -7,6 +7,7 @@ import sympy as sp
 import base64
 import struct
 import math
+from streamlit_extras.echo_expander import echo_expander
 
 
 st.title('3. Solución de Sistemas de Ecuaciones Lineales')
@@ -25,7 +26,7 @@ def is_zero_matrix(A):
                 return False
     return True
 
-
+st.cache(max_entries=1000)
 def gauss_pivoteo_parcial(A, b):
     n = len(A)
     # Crear matriz aumentada
@@ -61,6 +62,7 @@ def gauss_pivoteo_parcial(A, b):
         x[i] /= aumentada[i][i]
 
     return x,steps, np.round(aumentada.astype(float), decimals=4)
+
 r'''
 
 ## 3.2.1 Método de Gauss y pivoteo parcial
@@ -277,30 +279,61 @@ b = [(sp.Matrix(mat2))[i,-1] for i in range(r)]
 
 st.latex('A = ' + sp.latex(sp.Matrix(m))+ ' , b = '+sp.latex(sp.Matrix(b)))
 
+if st.button('Calcular'):
+    if not(is_zero_matrix(m)):
+        try:
+            if sp.Matrix(m).det() == 0:
+                st.write('La matriz no tiene solucion :(')
+            else:
+                solucion = gauss_pivoteo_parcial(np.array(m), np.array(b))
+                st.write('Matriz escalonada:')
+                st.latex(sp.latex(sp.Matrix(solucion[2])))
+                st.write('Solucion aproximada:')
+                st.latex(r'''\hat{x} \approx ''' + sp.latex(sp.Matrix(solucion[0])))
+                sol = sp.Matrix(m).inv() * sp.Matrix(b)
+                st.write('Error con respecto a la solucion:')
+                st.latex(' \hat{x} = ' + sp.latex(sp.Matrix(solucion[0])))
+                st.latex('error = ' + sp.latex(abs(sol-sp.Matrix(solucion[0]))))
+                st.write('Pasos realizados:')
+                for t in solucion[1]:
+                    st.latex(t)
+        except:
+            if sp.Matrix(m).det() == 0:
+                st.write('La matriz no tiene solucion :(')
+            else:
+                st.write('Algo salio mal :(')
 
-if not(is_zero_matrix(m)):
-    try:
-        if sp.Matrix(m).det() == 0:
-            st.write('La matriz no tiene solucion :(')
-        else:
-            solucion = gauss_pivoteo_parcial(np.array(m), np.array(b))
-            st.write('Matriz escalonada:')
-            st.latex(sp.latex(sp.Matrix(solucion[2])))
-            st.write('Solucion aproximada:')
-            st.latex(r'''\hat{x} \approx ''' + sp.latex(sp.Matrix(solucion[0])))
-            sol = sp.Matrix(m).inv() * sp.Matrix(b)
-            st.write('Error con respecto a la solucion:')
-            st.latex(' \hat{x} = ' + sp.latex(sp.Matrix(solucion[0])))
-            st.latex('error = ' + sp.latex(abs(sol-sp.Matrix(solucion[0]))))
-            st.write('Pasos realizados:')
-            for t in solucion[1]:
-                st.latex(t)
-    except:
-        if sp.Matrix(m).det() == 0:
-            st.write('La matriz no tiene solucion :(')
-        else:
-            st.write('Algo salio mal :(')
 
 
+with echo_expander(code_location="below", label="Implementación en Python"):
+    import numpy as np
+    import sympy as sp
+    def gauss_pivoteo_parcial(A, b):
+        n = len(A)
+        # Crear matriz aumentada
+        aumentada = np.concatenate((A, np.array([b]).T), axis=1)
 
+        # Eliminación gaussiana con pivoteo parcial
+        for i in range(n-1):
+            # Pivoteo parcial
+            max_index = np.argmax(np.abs(aumentada[i:, i]))+i
+
+            if max_index != i:
+                aumentada[[i, max_index]] = aumentada[[max_index, i]]
+
+            # Eliminación gaussiana
+            for j in range(i+1, n):
+                factor = aumentada[j, i] / aumentada[i, i]
+
+            aumentada[j] = aumentada[j]- (factor * aumentada[i])
+
+        # Sustitución hacia atrás
+        x = np.zeros(n)
+        for i in range(n-1, -1, -1):
+            x[i] = aumentada[i][-1]
+            for j in range(i+1, n):
+                x[i] -= aumentada[i][j] * x[j]
+            x[i] /= aumentada[i][i]
+
+        return x
 

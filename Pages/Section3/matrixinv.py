@@ -12,13 +12,6 @@ import math
 st.title('3. Solución de Sistemas de Ecuaciones Lineales')
 
 
-
-
-
-
-
-
-
 r'''
 # 3.1.1 Inversión de matrices
 
@@ -142,19 +135,6 @@ correctamente la matriz inversa de $A$.
 '''
 
 
-
-file1_ = open("Pages\Section3\FigMatrixinv.png", "rb")
-
-
-
-contents1 = file1_.read()
-data_url1 = base64.b64encode(contents1).decode("utf-8")
-file1_.close()
-
-st.markdown(
-    f'<img src="data:image/gif;base64,{data_url1}" alt="fig_Matrix_inv">',
-    unsafe_allow_html=True,
-)
 
 
 

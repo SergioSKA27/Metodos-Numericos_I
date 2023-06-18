@@ -7,6 +7,7 @@ import sympy as sp
 import base64
 import struct
 import math
+from streamlit_extras.echo_expander import echo_expander
 
 
 
@@ -24,6 +25,8 @@ def is_zero_matrix(A):
             if A[i][j] != 0:
                 return False
     return True
+
+st.cache(max_entries=1000)
 def jacobi(A, b, x0, tol, max_iter):
     n = len(A)
     x = x0.copy()
@@ -226,27 +229,55 @@ b = [(sp.Matrix(mat2))[i,-1] for i in range(r)]
 
 st.latex('A = ' + sp.latex(sp.Matrix(m))+ ' , b = '+sp.latex(sp.Matrix(b)))
 
+if st.button('Calcular'):
+    if not(is_zero_matrix(m)):
 
-if not(is_zero_matrix(m)):
+        try:
+            if sp.Matrix(m).det() == 0:
+                st.write('La matriz no tiene solucion :(  **|A| = 0**')
+            else:
+                solucion = jacobi(np.array(m), np.array(b),sp.parse_expr(x0),float(error),max_iter)
+                st.write('Solucion aproximada:')
+                st.latex(r'''\hat{x} \approx ''' + sp.latex(sp.Matrix(solucion[0])))
+                sol = sp.Matrix(m).inv() * sp.Matrix(b)
+                st.write('Error con respecto a la solucion:')
+                st.latex(' \hat{x} = ' + sp.latex(sp.Matrix(sol)))
+                st.latex('error = ' + sp.latex(abs(sol-sp.Matrix(solucion[0]))))
+                cols = ['x_'+str(i) for i in range(r)]
+                cols.append('|| x_k ||  ')
+                cols.append('|| x_k || < '+error)
+                spd = pd.DataFrame(solucion[1], columns=cols)
+                st.dataframe(spd)
+        except:
+            if sp.Matrix(m).det() == 0:
+                st.write('La matriz no tiene solucion :(')
+            else:
+                st.write('Algo salio mal :(')
 
-    try:
-        if sp.Matrix(m).det() == 0:
-            st.write('La matriz no tiene solucion :(  **|A| = 0**')
-        else:
-            solucion = jacobi(np.array(m), np.array(b),sp.parse_expr(x0),float(error),max_iter)
-            st.write('Solucion aproximada:')
-            st.latex(r'''\hat{x} \approx ''' + sp.latex(sp.Matrix(solucion[0])))
-            sol = sp.Matrix(m).inv() * sp.Matrix(b)
-            st.write('Error con respecto a la solucion:')
-            st.latex(' \hat{x} = ' + sp.latex(sp.Matrix(sol)))
-            st.latex('error = ' + sp.latex(abs(sol-sp.Matrix(solucion[0]))))
-            cols = ['x_'+str(i) for i in range(r)]
-            cols.append('|| x_k ||  ')
-            cols.append('|| x_k || < '+error)
-            spd = pd.DataFrame(solucion[1], columns=cols)
-            st.dataframe(spd)
-    except:
-        if sp.Matrix(m).det() == 0:
-            st.write('La matriz no tiene solucion :(')
-        else:
-            st.write('Algo salio mal :(')
+
+with echo_expander(code_location="below", label="Implementación en Python"):
+    import numpy as np
+    import sympy as sp
+    def jacobi(A, b, x0, tol, max_iter):
+        n = len(A)
+        x = x0.copy()
+        x_prev = x0.copy()
+        iteration = 0
+
+        while iteration < max_iter:
+            for i in range(n):
+                s = 0
+                for j in range(n):
+                    if j != i:
+                        s += A[i, j] * x_prev[j]
+
+                x[i] = (b[i] - s) / A[i, i]
+
+            if np.linalg.norm(np.array(x).astype(float) - np.array(x_prev).astype(float)) < tol:
+                break
+
+            x_prev = x.copy()
+            iteration += 1
+
+        return x
+

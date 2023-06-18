@@ -7,6 +7,7 @@ import sympy as sp
 import base64
 import struct
 import math
+from streamlit_extras.echo_expander import echo_expander
 
 
 
@@ -25,6 +26,8 @@ def is_zero_matrix(A):
             if A[i][j] != 0:
                 return False
     return True
+
+st.cache(max_entries=1000)
 def gauss_partitioned(A, b):
     """
     The function `gauss_partitioned` performs Gaussian elimination on a partitioned matrix and returns the solution vector
@@ -443,27 +446,68 @@ b = [(sp.Matrix(mat2))[i,-1] for i in range(r)]
 
 st.latex('A = ' + sp.latex(sp.Matrix(m))+ ' , b = '+sp.latex(sp.Matrix(b)))
 
+if st.button('Calcular'):
+    if not(is_zero_matrix(m)):
 
-if not(is_zero_matrix(m)):
+        try:
+            if sp.Matrix(m).det() == 0:
+                st.write('La matriz no tiene solucion :(  **|A| = 0**')
+            else:
+                solucion = gauss_partitioned(np.array(m), np.array(b))
+                st.write('Matriz escalonada:')
+                st.latex(sp.latex(sp.Matrix(solucion[-1])))
+                st.write('Solucion aproximada:')
+                st.latex(r'''\hat{x} \approx ''' + sp.latex(sp.Matrix(solucion[0])))
+                sol = sp.Matrix(m).inv() * sp.Matrix(b)
+                st.write('Error con respecto a la solucion:')
+                st.latex(' \hat{x} = ' + sp.latex(sp.Matrix(sol)))
+                st.latex('error = ' + sp.latex(abs(sol-sp.Matrix(solucion[0]))))
+                st.write('Pasos realizados:')
+                for t in solucion[1]:
+                    st.latex(t)
+        except:
+            if sp.Matrix(m).det() == 0:
+                st.write('La matriz no tiene solucion :(')
+            else:
+                st.write('Algo salio mal :(')
 
-    try:
-        if sp.Matrix(m).det() == 0:
-            st.write('La matriz no tiene solucion :(  **|A| = 0**')
-        else:
-            solucion = gauss_partitioned(np.array(m), np.array(b))
-            st.write('Matriz escalonada:')
-            st.latex(sp.latex(sp.Matrix(solucion[-1])))
-            st.write('Solucion aproximada:')
-            st.latex(r'''\hat{x} \approx ''' + sp.latex(sp.Matrix(solucion[0])))
-            sol = sp.Matrix(m).inv() * sp.Matrix(b)
-            st.write('Error con respecto a la solucion:')
-            st.latex(' \hat{x} = ' + sp.latex(sp.Matrix(sol)))
-            st.latex('error = ' + sp.latex(abs(sol-sp.Matrix(solucion[0]))))
-            st.write('Pasos realizados:')
-            for t in solucion[1]:
-                st.latex(t)
-    except:
-        if sp.Matrix(m).det() == 0:
-            st.write('La matriz no tiene solucion :(')
-        else:
-            st.write('Algo salio mal :(')
+
+
+with echo_expander(code_location="below", label="Implementación en Python"):
+    import numpy as np
+    import sympy as sp
+    def gauss_partitioned(A, b):
+
+        n = A.shape[0]
+
+        steps = []
+
+        b1  = b[:n//2]
+        b2 = b[n//2:]
+
+        # Descomposición de la matriz A
+        A11 = A[:n//2, :n//2]
+        A12 = A[:n//2, n//2:]
+        A21 = A[n//2:, :n//2]
+        A22 = A[n//2:, n//2:]
+
+
+        steps.append('A_{11} = ' + sp.latex(sp.Matrix(A11)))
+        steps.append('A_{12} = ' + sp.latex(sp.Matrix(A12)))
+        steps.append('A_{21} = ' + sp.latex(sp.Matrix(A21)))
+        steps.append('A_{22} = ' + sp.latex(sp.Matrix(A22)))
+        steps.append('b_{1} = ' + sp.latex(sp.Matrix(b1)))
+        steps.append('b_{2} = ' + sp.latex(sp.Matrix(b2)))
+
+
+        A11_inv = np.linalg.inv(A11.astype(float))
+        A12_p =np.matmul(A11_inv, A12)
+        b1_p = A11_inv @ b1
+        A22_p = A22 - (np.matmul(A21, A12_p))
+        b2_p = b2- (np.matmul(A21 , b1_p))
+        A22_inv = np.linalg.inv(A22_p.astype(float))
+        b2_pp = A22_inv @ b2_p
+        b1_pp = b1_p- (np.matmul(A12_p , b2_pp))
+
+        return np.concatenate((b1_pp,b2_pp)),steps,np.eye(n)
+

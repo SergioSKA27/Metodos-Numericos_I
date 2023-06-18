@@ -7,6 +7,7 @@ import sympy as sp
 import base64
 import struct
 import math
+from streamlit_extras.echo_expander import echo_expander
 
 def is_zero_matrix(A):
     """
@@ -24,6 +25,8 @@ def is_zero_matrix(A):
     return True
 
 st.title('3. Solución de Sistemas de Ecuaciones Lineales')
+
+st.cache(max_entries=1000)
 def gauss_seidel(A, b, omega, x0, tol, max_iter):
     n = len(A)
     x = x0.copy()
@@ -190,33 +193,64 @@ b = [(sp.Matrix(mat2))[i,-1] for i in range(r)]
 
 st.latex('A = ' + sp.latex(sp.Matrix(m))+ ' , b = '+sp.latex(sp.Matrix(b)))
 
+if st.button('Calcular'):
+    if not(is_zero_matrix(m)):
 
-if not(is_zero_matrix(m)):
+        try:
+            if sp.Matrix(m).det() == 0:
+                st.write('La matriz no tiene solucion :(  **|A| = 0**')
+            else:
+                solucion = gauss_seidel(np.array(m), np.array(b), float(ome),sp.parse_expr(x0),float(error),max_iter)
 
-    try:
-        if sp.Matrix(m).det() == 0:
-            st.write('La matriz no tiene solucion :(  **|A| = 0**')
-        else:
-            solucion = gauss_seidel(np.array(m), np.array(b), float(ome),sp.parse_expr(x0),float(error),max_iter)
-
-    #        st.write('Matriz escalonada:')
-    #        st.latex(sp.latex(sp.Matrix(solucion[-1])))
-            st.write('Solucion aproximada:')
-            st.latex(r'''\hat{x} \approx ''' + sp.latex(sp.Matrix(solucion[0])))
-            sol = sp.Matrix(m).inv() * sp.Matrix(b)
-            st.write('Error con respecto a la solucion:')
-            st.latex(' \hat{x} = ' + sp.latex(sp.Matrix(sol)))
-            st.latex('error = ' + sp.latex(abs(sol-sp.Matrix(solucion[0]))))
-    #        st.write('Pasos realizados:')
-            cols = ['x_'+str(i) for i in range(r)]
-            cols.append('|| x_k ||  ')
-            cols.append('|| x_k || < '+error)
-            spd = pd.DataFrame(solucion[1], columns=cols)
-            st.dataframe(spd)
+        #        st.write('Matriz escalonada:')
+        #        st.latex(sp.latex(sp.Matrix(solucion[-1])))
+                st.write('Solucion aproximada:')
+                st.latex(r'''\hat{x} \approx ''' + sp.latex(sp.Matrix(solucion[0])))
+                sol = sp.Matrix(m).inv() * sp.Matrix(b)
+                st.write('Error con respecto a la solucion:')
+                st.latex(' \hat{x} = ' + sp.latex(sp.Matrix(sol)))
+                st.latex('error = ' + sp.latex(abs(sol-sp.Matrix(solucion[0]))))
+        #        st.write('Pasos realizados:')
+                cols = ['x_'+str(i) for i in range(r)]
+                cols.append('|| x_k ||  ')
+                cols.append('|| x_k || < '+error)
+                spd = pd.DataFrame(solucion[1], columns=cols)
+                st.dataframe(spd)
 
 
-    except:
-        if sp.Matrix(m).det() == 0:
-            st.write('La matriz no tiene solucion :(')
-        else:
-            st.write('Algo salio mal :(')
+        except:
+            if sp.Matrix(m).det() == 0:
+                st.write('La matriz no tiene solucion :(')
+            else:
+                st.write('Algo salio mal :(')
+
+
+with echo_expander(code_location="below", label="Implementación en Python"):
+    import numpy as np
+    import sympy as sp
+    def gauss_seidel(A, b, omega, x0, tol, max_iter):
+        n = len(A)
+        x = x0.copy()
+        iteration = 0
+        error = tol + 1
+
+        while error > tol and iteration < max_iter:
+            x_prev = x.copy()
+
+            for i in range(n):
+                sum1 = 0
+                for j in range(i):
+                    sum1 += A[i, j] * x[j]
+
+                sum2 = 0
+                for j in range(i + 1, n):
+                    sum2 += A[i, j] * x_prev[j]
+
+                x[i] = (1 - omega) * x_prev[i] + (omega / A[i, i]) * (b[i] - sum1 - sum2)
+
+            error = np.linalg.norm(np.array(x).astype(float) - np.array(x_prev).astype(float))
+            x_prev = x.copy()
+            iteration += 1
+
+        return x
+
