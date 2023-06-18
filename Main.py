@@ -78,6 +78,10 @@ show_pages(
         Page("Pages/Section4/Doolittle.py", "4.3 Método Doolittle", ":closed_book:"),
         Page("Pages/Section4/Crout.py", "4.4 Solución de sistemas bandados (Método de Crout)", ":closed_book:"),
 
+        Page("Pages/Section5/Potencias.py", "5.1 Método de potencias", ":open_book:"),
+        Page("Pages/Section5/Householder.py", "5.2 Transformación de Householder", ":open_book:"),
+        Page("Pages/Section5/QR.py", "5.3 Iteración QR", ":open_book:"),
+
     ]
 )
 
