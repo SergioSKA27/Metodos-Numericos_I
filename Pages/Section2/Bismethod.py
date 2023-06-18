@@ -7,9 +7,9 @@ import sympy as sp
 import base64
 import struct
 import math
-from streamlit_extras.stoggle import stoggle
+from streamlit_extras.echo_expander import echo_expander
 
-
+st.cache(max_entries=1000)
 def bisection_method(f,a, b, tolerance, max_iterations):
     """
     The bisection_method function implements the bisection method for finding the root of a function within a given
@@ -231,34 +231,37 @@ maxitr = st.number_input('Ingrese el máximo número de iteraciones: ',1,1000,va
 
 
 try:
-    x_vals,y_vals,mtab = bisection_method(ff,aval,bval,float(error),maxitr)
-    tpd2 = pd.DataFrame(mtab,columns=['a','b','c = a+b/2','f(c)','f(c) < '+str(error)])
-    st.write(tpd2)
-    # Crear una figura de Plotly
-    fig3 = go.Figure()
+    if st.button('Calcular'):
+        x_vals,y_vals,mtab = bisection_method(ff,aval,bval,float(error),maxitr)
+        tpd2 = pd.DataFrame(mtab,columns=['a','b','c = a+b/2','f(c)','f(c) < '+str(error)])
+        st.write(tpd2)
+        # Crear una figura de Plotly
+        fig3 = go.Figure()
 
-    # Agregar la función f(x)
+        # Agregar la función f(x)
 
-    x3 = np.linspace(aval, bval, 100)
-    y3 = sp.lambdify(x,ff)
-    fig3.add_trace(go.Scatter(x=x3, y=y3(x3), name='f(x)'))
+        x3 = np.linspace(aval, bval, 100)
+        y3 = sp.lambdify(x,ff)
+        fig3.add_trace(go.Scatter(x=x3, y=y3(x3), name='f(x)'))
 
-    # Agregar los puntos del método de bisección
-    fig3.add_trace(go.Scatter(x=x_vals, y=y_vals, mode='markers', name='Puntos de aproximación',marker_color='rgba(152, 0, 0, .8)'))
+        # Agregar los puntos del método de bisección
+        fig3.add_trace(go.Scatter(x=x_vals, y=y_vals, mode='markers', name='Puntos de aproximación',marker_color='rgba(152, 0, 0, .8)'))
 
-    fig3.add_hline(0)
-    # Establecer el título y etiquetas de los ejes
-    fig3.update_layout(title='Método de Bisección', xaxis_title='x', yaxis_title='f(x)')
+        fig3.add_hline(0)
+        # Establecer el título y etiquetas de los ejes
+        fig3.update_layout(title='Método de Bisección', xaxis_title='x', yaxis_title='f(x)')
 
-    # Mostrar la figura
-    st.plotly_chart(fig3)
+        # Mostrar la figura
+        st.plotly_chart(fig3)
 except:
-    st.write('')
+    st.write('Algo salio mal', icon="🚨")
 
 
 
-stoggle('Implementación en Python',
-r'''
+
+with echo_expander(code_location="below", label="Implementación en Python"):
+    import numpy as np
+    import sympy as sp
     def bisection_method(f,a, b, tolerance, max_iterations):
 
         x_values = []
@@ -283,8 +286,3 @@ r'''
             iteration += 1
 
         return x_values, y_values
-
-
-'''
-
-)

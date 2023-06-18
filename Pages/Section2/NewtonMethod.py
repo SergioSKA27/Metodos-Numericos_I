@@ -7,16 +7,10 @@ import sympy as sp
 import base64
 import struct
 import math
-from streamlit_extras.stoggle import stoggle
+from streamlit_extras.echo_expander import echo_expander
 
 
-
-def dwf(x):
-    return x**3 - 2*x - 5
-
-def dddf(x):
-    return 3*x**2 - 2
-
+st.cache(max_entries=1000)
 def newton_method(f,x0, tolerance, max_iterations):
     """
     The function implements the Newton-Raphson method for finding roots of a function with a given tolerance and maximum
@@ -238,32 +232,36 @@ maxitr = st.number_input('Ingrese el máximo número de iteraciones: ',1,1000,va
 
 
 try:
-    x_vals,y_vals,mtab = newton_method(ff,xini,float(error),maxitr)
-    tpd2 = pd.DataFrame(mtab,columns=['x_n','f(x_n)','x_n+1','|f(c)| < '+str(error)])
-    st.write(tpd2)
-    # Crear una figura de Plotly
-    fig3 = go.Figure()
+    if st.button('Calcular'):
+        x_vals,y_vals,mtab = newton_method(ff,xini,float(error),maxitr)
+        tpd2 = pd.DataFrame(mtab,columns=['x_n','f(x_n)','x_n+1','|f(c)| < '+str(error)])
+        st.write(tpd2)
+        # Crear una figura de Plotly
+        fig3 = go.Figure()
 
-    # Agregar la función f(x)
+        # Agregar la función f(x)
 
-    x3 = np.linspace(xini-10, xini+10, 100)
-    y3 = sp.lambdify(x,ff)
-    fig3.add_trace(go.Scatter(x=x3, y=y3(x3), name='f(x)'))
+        x3 = np.linspace(xini-10, xini+10, 100)
+        y3 = sp.lambdify(x,ff)
+        fig3.add_trace(go.Scatter(x=x3, y=y3(x3), name='f(x)'))
 
-    # Agregar los puntos del método de bisección
-    fig3.add_trace(go.Scatter(x=x_vals, y=y_vals, mode='markers', name='Puntos de aproximación',marker_color='rgba(152, 0, 0, .8)'))
+        # Agregar los puntos del método de bisección
+        fig3.add_trace(go.Scatter(x=x_vals, y=y_vals, mode='markers', name='Puntos de aproximación',marker_color='rgba(152, 0, 0, .8)'))
 
-    fig3.add_hline(0)
-    # Establecer el título y etiquetas de los ejes
-    fig3.update_layout(title='Método de Newton', xaxis_title='x', yaxis_title='f(x)')
+        fig3.add_hline(0)
+        # Establecer el título y etiquetas de los ejes
+        fig3.update_layout(title='Método de Newton', xaxis_title='x', yaxis_title='f(x)')
 
-    # Mostrar la figura
-    st.plotly_chart(fig3)
+        # Mostrar la figura
+        st.plotly_chart(fig3)
 except:
     st.write('')
 
-stoggle('Implementación en Python',
-r'''
+
+
+with echo_expander(code_location="below", label="Implementación en Python"):
+    import numpy as np
+    import sympy as sp
     def newton_method(f,x0, tolerance, max_iterations):
 
         x_values = []
@@ -286,6 +284,3 @@ r'''
             iterations += 1
 
         return x_values, y_values
-
-'''
-)

@@ -8,7 +8,7 @@ import base64
 import struct
 import math
 
-
+st.cache
 file2_ = open("fes-acatlán-unam.gif", "rb")
 
 
